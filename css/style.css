@@ -6,6 +6,10 @@ h1, h2 {
     font-family: "Courier New", monospace;
 }
 
+#word {
+    letter-spacing: 10px;
+}
+
 #wallpaper {
     height: 100%;
     width: 100%;

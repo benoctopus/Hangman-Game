@@ -3,7 +3,12 @@ var gameEnv = {
     losses: 0,
     active: false,
     currentW: "",
-    words: [
+    hiddenW: "",
+    winner: false,
+    word: $("#word"),
+    sCount: 0,
+    lCount: 0,
+    bank: [
         "saloon",
         "revolver",
         "flapper",
@@ -16,101 +21,166 @@ var gameEnv = {
         "whiskey",
         "tango"
     ],
-    randomIndex: function() {
-        var answer = Math.floor(Math.random() * (this.words.length));
-        console.log(answer);
-        return answer;
+
+    randomWord: function() {
+        //pick random word from word bank
+        var i = Math.floor(Math.random() * (gameEnv.bank.length));
+        var wd = this.bank[i];
+        this.bank.splice(i, 1);
+        return wd
     },
+
+    checkWord: function(character) {
+        var condition = true;
+        var gotIt = false;
+        this.currentW = $.makeArray(this.currentW);
+        this.hiddenW = $.makeArray(this.hiddenW);
+        while(condition) {
+            var i = this.currentW.indexOf(character);
+            if(i > -1) {
+                this.currentW[i] = "_";
+                this.hiddenW[i] = character;
+                gotIt = true;
+                this.sCount++;
+            }
+            else if (i < 0 && gotIt === true ) {
+                break;
+            }
+            else {
+                this.lCount++
+            }
+        }
+        this.currentW = this.currentW.toString();
+        this.hiddenW = this.hiddenW.toString();
+        this.word.text(this.hiddenW);
+    },
+
     startGame: function () {
-        $("#instructions").text("Guess a letter");
+        //setup new game environment
+        this.sCount = 0;
+        this.lCount = 0;
+        this.currentW = gameEnv.randomWord();
         this.active = true;
-        this.currentW = this.words;
-        console.log(this.currentW)
+        this.hiddenW = "";
+        for (var i = 0; i < gameEnv.currentW.length; i++) {
+            this.hiddenW += "_";
+        }
+        guillotine.canvas.reset();
+        instructions.text("Guess a letter");
+        this.word.text(this.hiddenW);
+        console.log(gameEnv.currentW);
     }
 };
 
-var canvas = oCanvas.create({
+c = oCanvas.create({
     canvas: "#canvas",
     fps: 60
 });
 
-man = {
-    //draw all body parts seperately
-    head: canvas.display.ellipse({
-        x: canvas.width / 2,
-        y: canvas.height * (.25),
-        radius_x: canvas.width / 12,
-        radius_y: canvas.height / 12,
+var guillotine = {
+    //draw all body parts separately
+    canvas: c,
+
+    head: function() {
+        return this.canvas.display.ellipse({
+        x: this.canvas.width / 2,
+        y: this.canvas.height * (.25),
+        radius_x: this.canvas.width / 12,
+        radius_y: this.canvas.height / 12,
         stroke: "2px black"
-    }),
-    body: canvas.display.line({
+    })},
+    body: function() {
+        return this.canvas.display.line({
         start: {
-            x: canvas.width / 2,
-            y: canvas.height * (.25) + canvas.height / 12
+            x: this.canvas.width / 2,
+            y: this.canvas.height * (.25) + this.canvas.height / 12
         },
         end: {
-            x: canvas.width/2,
-            y: canvas.height * .70
+            x: this.canvas.width/2,
+            y: this.canvas.height * .70
         },
         stroke: "3px black",
         cap: "flat"
-    }),
-    LArm: canvas.display.line({
+    })},
+    LArm: function() {
+        return this.canvas.display.line({
         start: {
-            x: canvas.width / 2,
-            y: canvas.height / 2 * .80
+            x: this.canvas.width / 2,
+            y: this.canvas.height / 2 * .80
         },
         end: {
-            x: canvas.width/2 - canvas.width/5,
-            y: canvas.height *.50
+            x: this.canvas.width/2 - this.canvas.width/5,
+            y: this.canvas.height *.50
         },
         cap: "flat",
         stroke: "2px black"
-    }),
-    RArm: canvas.display.line({
+    })},
+    RArm: function() {
+        return this.canvas.display.line({
         start: {
-            x: canvas.width / 2,
-            y: canvas.height / 2 * .80
+            x: this.canvas.width / 2,
+            y: this.canvas.height / 2 * .80
         },
         end: {
-            x: canvas.width/2 + canvas.width/5,
-            y: canvas.height *.50
+            x: this.canvas.width/2 + this.canvas.width/5,
+            y: this.canvas.height *.50
         },
         cap: "flat",
         stroke: "2px black"
-    }),
-    LLeg: canvas.display.line({
+    })},
+    LLeg: function() {
+        return this.canvas.display.line({
         start: {
-            x: canvas.width/2,
-            y: canvas.height * .70
+            x: this.canvas.width/2,
+            y: this.canvas.height * .70
         },
         end: {
-            x: canvas.width/2 * .75,
-            y: canvas.height * .95
+            x: this.canvas.width/2 * .75,
+            y: this.canvas.height * .95
         },
         cap: "flat",
         stroke: "3px black"
-    }),
-    RLeg: canvas.display.line({
+    })},
+    RLeg: function() {
+        return this.canvas.display.line({
         start: {
-            x: canvas.width/2,
-            y: canvas.height * .70
+            x: this.canvas.width/2,
+            y: this.canvas.height * .70
         },
         end: {
-            x: canvas.width/2 * 1.25,
-            y: canvas.height * .95
+            x: this.canvas.width/2 * 1.25,
+            y: this.canvas.height * .95
         },
         cap: "flat",
         stroke: "3px black"
-    })
+    })},
+    drawList: [
+        this.head,
+        this.body,
+        this.LArm,
+        this.RArm,
+        this.LLeg,
+        this.RLeg
+    ],
+    drawNext: function (count) {
+        this.canvas.addChild(this.drawList[count]);
+    }
 };
+//declare jQuery objects
 
-$(document).ready(main());
+var instructions = $("#instructions");
+var listener1 = $(document);
+//start the magic
+listener1.ready(main());
 
 function main() {
-    $("#instructions").text("Press any key to begin");
-    console.log("press any key to start");
-    $("body").on("keypress", gameEnv.startGame);
+    if(gameEnv.active === false) {
+        instructions.text("Press any key to begin");
+    }
+    listener1.on("keypress", function(){
+        gameEnv.startGame();
+        listener1.off()
+    });
 }
 
 
