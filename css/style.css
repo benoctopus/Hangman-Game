@@ -1,7 +1,9 @@
 h1 {
-    font-family: "Courier New", monospace;
     letter-spacing: 7vw;
     font-size: 5rem;
+}
+h1, h2 {
+    font-family: "Courier New", monospace;
 }
 
 #wallpaper {

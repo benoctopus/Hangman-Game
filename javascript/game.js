@@ -1,5 +1,35 @@
+var gameEnv = {
+    wins: 0,
+    losses: 0,
+    active: false,
+    currentW: "",
+    words: [
+        "saloon",
+        "revolver",
+        "flapper",
+        "outlaw",
+        "sheriff",
+        "lawman",
+        "frontier",
+        "cowpoke",
+        "mustang",
+        "whiskey",
+        "tango"
+    ],
+    randomIndex: function() {
+        var answer = Math.floor(Math.random() * (this.words.length));
+        console.log(answer);
+        return answer;
+    },
+    startGame: function () {
+        $("#instructions").text("Guess a letter");
+        this.active = true;
+        this.currentW = this.words;
+        console.log(this.currentW)
+    }
+};
+
 var canvas = oCanvas.create({
-    //create oCanvas object for hanging man graphic
     canvas: "#canvas",
     fps: 60
 });
@@ -78,10 +108,11 @@ man = {
 $(document).ready(main());
 
 function main() {
+    $("#instructions").text("Press any key to begin");
     console.log("press any key to start");
-    $("body").on("keypress", startGame())
-
+    $("body").on("keypress", gameEnv.startGame);
 }
+
 
 // canvas.addChild(man.head);
 // canvas.addChild(man.body);
