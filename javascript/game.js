@@ -1,13 +1,13 @@
 var gameEnv = {
+    word: $("#word"),
     wins: 0,
     losses: 0,
-    active: false,
-    currentW: "",
-    hiddenW: "",
-    winner: false,
-    word: $("#word"),
     sCount: 0,
     lCount: 0,
+    active: false,
+    winner: false,
+    currentW: "",
+    hiddenW: "",
     bank: [
         "saloon",
         "revolver",
@@ -30,11 +30,27 @@ var gameEnv = {
         return wd
     },
 
+    toArray: function(string) {
+        var temp = [];
+        for(var i = 0; i < string.length; i++) {
+            temp.push(string[i])
+        }
+        return temp;
+    },
+
+    arrayToString: function(array) {
+        var temp = "";
+        for(var i = 0; i < array.length; i++) {
+            temp += array[i]
+        }
+        return temp;
+    },
+
     checkWord: function(character) {
         var condition = true;
         var gotIt = false;
-        this.currentW = $.makeArray(this.currentW);
-        this.hiddenW = $.makeArray(this.hiddenW);
+        this.currentW = this.toArray(this.currentW);
+        this.hiddenW = this.toArray(this.hiddenW);
         while(condition) {
             var i = this.currentW.indexOf(character);
             if(i > -1) {
@@ -47,11 +63,12 @@ var gameEnv = {
                 break;
             }
             else {
-                this.lCount++
+                this.lCount++;
+                break
             }
         }
-        this.currentW = this.currentW.toString();
-        this.hiddenW = this.hiddenW.toString();
+        this.currentW = this.arrayToString(this.currentW);
+        this.hiddenW = this.arrayToString(this.hiddenW);
         this.word.text(this.hiddenW);
     },
 
@@ -72,14 +89,13 @@ var gameEnv = {
     }
 };
 
-c = oCanvas.create({
+canvas = oCanvas.create({
     canvas: "#canvas",
     fps: 60
 });
 
 var guillotine = {
     //draw all body parts separately
-    canvas: c,
 
     head: function() {
         return this.canvas.display.ellipse({
