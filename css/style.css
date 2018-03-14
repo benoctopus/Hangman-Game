@@ -10,6 +10,22 @@ h1, h2 {
     letter-spacing: 10px;
 }
 
+#right {padding-left: 15px;}
+
+#left {
+    
+}
+
+#canvas {
+    margin-left: 80px;
+}
+
+.numbers {
+    font-size: 96px;
+    margin: 11px;
+    margin-top: -20px;
+}
+
 #wallpaper {
     height: 100%;
     width: 100%;
