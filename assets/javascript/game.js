@@ -187,6 +187,7 @@ var gameEnv = {
                 || character === "/"
                 || character === "["
                 || character === "]"
+                || character === ";"
                 || typeof character !== "string"
             ) {
                 // disallows special keys without penalty
