@@ -22,6 +22,10 @@ No sort of installation required.
 
 Note: Sometimes this website may cause the browser to give an error stating that the js scripts used are insecure. I'm not entirely sure why that might be, but i promise that it's all safe :)
 
+### Attributions
+
+Background image taken from pixelbay.com, listed as free for personal use and redistribution with no attribution neccisary.
+
 ### License
 
 See included license file.
