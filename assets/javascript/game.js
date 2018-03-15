@@ -1,4 +1,5 @@
 var gameEnv = {
+    //declare game enviroment and properties as object
     word: $("#word"),
     wins: 0,
     losses: 0,
@@ -6,6 +7,7 @@ var gameEnv = {
     lCount: 0,
     active: false,
     winner: false,
+    gameOver: false,
     currentW: "",
     hiddenW: "",
     bank: [
@@ -66,6 +68,7 @@ var gameEnv = {
     },
 
     stringToArray: function (string) {
+        //takes string returns array
         var temp = [];
         for (var i = 0; i < string.length; i++) {
             temp.push(string[i])
@@ -74,6 +77,7 @@ var gameEnv = {
     },
 
     arrayToString: function (array) {
+        //takes array, returns string
         var temp = "";
         for (var i = 0; i < array.length; i++) {
             temp += array[i]
@@ -81,34 +85,48 @@ var gameEnv = {
         return temp;
     },
 
+    reboot: function(){
+        // wait for a moment before restarting game
+        listener1.ready(function(){
+            var currentTime = new Date().getTime();
+            while (currentTime + 600 >= new Date().getTime()) {
+            }
+            gameEnv.startGame()
+        });
+    },
+
     keyListener: function() {
         //checks win/loss status / grabs key and sends to check word
         if (this.lCount >= this.parts.length) {
-            listener2.off();
+            this.gameOver = true;
+            listener1.off("keyup");
             this.losses += 1;
             lPost.text(this.losses);
             instructions.text("You Loose");
-            play_again.text("press the space bar to try again");
-            main()
+            this.reboot();
         }
         else if (this.sCount >= this.currentW.length) {
-            listener2.off();
+            this.gameOver = false;
+            listener1.off("keyup");
             this.wins += 1;
             wPost.text(this.wins);
-            instructions.text("You Win");
-            play_again.text("press the space bar to play again");
-            main()
+            instructions.text("You Win!");
+            this.reboot();
         }
-        else {
-            listener2.on("keyup", function(event) {
+        else if (this.gameOver === false) {
+            listener1.on("keyup", function(event) {
                 e = event.key;
-                listener2.off();
+                listener1.off("keyup");
                 gameEnv.checkWord(e)
             })
         }
     },
 
     checkWord: function (character) {
+        //checks if character is in word then either increments success count or failure count
+        if(this.gameOver === true) {
+            return
+        }
         console.log(character);
         var condition = true;
         var gotIt = false;
@@ -116,7 +134,7 @@ var gameEnv = {
         this.hiddenW = this.stringToArray(this.hiddenW);
         while (condition) {
             var i = this.currentW.indexOf(character);
-            if (i > -1) {
+            if (i > -1 && this.gameOver === false) {
                 this.currentW[i] = "_";
                 this.hiddenW[i] = character;
                 gotIt = true;
@@ -129,7 +147,7 @@ var gameEnv = {
                 gotIt = true;
                 break
             }
-            else {
+            else if (i < 1 && this.gameOver === false) {
                 if(this.lCount < this.parts.length) {
                     this.parts[this.lCount]();
                     this.lCount++;
@@ -140,12 +158,13 @@ var gameEnv = {
         this.currentW = this.arrayToString(this.currentW);
         this.hiddenW = this.arrayToString(this.hiddenW);
         this.word.text(this.hiddenW);
-        listener2.off();
+        listener1.off("keyup");
         this.keyListener()
     },
 
     startGame: function () {
         //setup new game environment
+        while (typeof listener1.event !== "undefined")
         play_again.text("     ");
         this.sCount = 0;
         this.lCount = 0;
@@ -156,26 +175,23 @@ var gameEnv = {
             this.hiddenW += "_";
         }
         canvas.reset();
-        // canvas.addChild(man.head);
-        // canvas.addChild(man.body);
-        // canvas.addChild(man.lArm);
-        // canvas.addChild(man.lLeg);
-        // canvas.addChild(man.rArm);
-        // canvas.addChild(man.rLeg);
         instructions.text("Guess a letter");
         play_again.text("(use letter keys)");
         this.word.text(this.hiddenW);
         console.log(gameEnv.currentW);
+        this.gameOver = false;
         this.keyListener()
     }
 };
 
 var canvas = oCanvas.create({
+    //declare canvas object
     canvas: "#canvas",
     fps: 60
 });
 
 var man = {
+    //all parts of man drawing declared
     base: canvas.display.line({
         start: {
             x: 0,
@@ -292,28 +308,32 @@ var man = {
         stroke: "3px black"
     })
 };
-//declare jQuery objects
-var instructions = $("#instructions");
-var play_again = $("#replay");
-var wPost = $("#left");
-var lPost = $("#right");
-play_again.text("   ");
-var listener1 = $(document);
-var listener2 = $(document);
-//start the magic
-listener1.ready(main());
 
 function main() {
+    //set game in motion after
     if(gameEnv.active === false) {
         instructions.text("Press space bar to begin");
     }
-    listener1.on("keypress", function(event){
+    listener1.on("keyup", function(event){
         var e = event.key;
         if (e === " ") {
             console.log(e);
-            listener1.off();
+            listener1.off("keyup");
             gameEnv.startGame();
         }
     });
 }
 
+//declare jQuery objects
+
+//start the magic
+
+if (gameEnv.active === false) {
+    var instructions = $("#instructions");
+    var play_again = $("#replay");
+    var wPost = $("#left");
+    var lPost = $("#right");
+    play_again.text("   ");
+    var listener1 = $(document);
+    listener1.ready(main());
+}
