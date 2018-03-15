@@ -19,10 +19,24 @@ var gameEnv = {
         "cowpoke",
         "mustang",
         "whiskey",
-        "tango"
+        "tango",
+        "texas",
+        "cowboy",
+        "standoff"
     ],
-
     parts: [
+        function() {
+            canvas.addChild(man.base)
+        },
+        function() {
+            canvas.addChild(man.vertical)
+        },
+        function() {
+            canvas.addChild(man.top)
+        },
+        function() {
+            canvas.addChild(man.noose)
+        },
         function() {
             canvas.addChild(man.head)
         },
@@ -51,7 +65,7 @@ var gameEnv = {
         return wd
     },
 
-    toArray: function (string) {
+    stringToArray: function (string) {
         var temp = [];
         for (var i = 0; i < string.length; i++) {
             temp.push(string[i])
@@ -68,31 +82,38 @@ var gameEnv = {
     },
 
     keyListener: function() {
-        if (this.lCount >= 6) {
+        //checks win/loss status / grabs key and sends to check word
+        if (this.lCount >= this.parts.length) {
+            listener2.off();
             this.losses += 1;
+            lPost.text(this.losses);
             instructions.text("You Loose");
             play_again.text("press the space bar to try again");
             main()
         }
         else if (this.sCount >= this.currentW.length) {
+            listener2.off();
             this.wins += 1;
+            wPost.text(this.wins);
             instructions.text("You Win");
             play_again.text("press the space bar to play again");
             main()
         }
-        listener2.on("keyup", function(event) {
-            e = event.key;
-            listener2.off();
-            gameEnv.checkWord(e)
-        })
+        else {
+            listener2.on("keyup", function(event) {
+                e = event.key;
+                listener2.off();
+                gameEnv.checkWord(e)
+            })
+        }
     },
 
     checkWord: function (character) {
         console.log(character);
         var condition = true;
         var gotIt = false;
-        this.currentW = this.toArray(this.currentW);
-        this.hiddenW = this.toArray(this.hiddenW);
+        this.currentW = this.stringToArray(this.currentW);
+        this.hiddenW = this.stringToArray(this.hiddenW);
         while (condition) {
             var i = this.currentW.indexOf(character);
             if (i > -1) {
@@ -109,7 +130,7 @@ var gameEnv = {
                 break
             }
             else {
-                if(this.lCount < 6) {
+                if(this.lCount < this.parts.length) {
                     this.parts[this.lCount]();
                     this.lCount++;
                     break
@@ -135,10 +156,6 @@ var gameEnv = {
             this.hiddenW += "_";
         }
         canvas.reset();
-        canvas.addChild(man.base);
-        canvas.addChild(man.vertical);
-        canvas.addChild(man.top);
-        canvas.addChild(man.noose);
         // canvas.addChild(man.head);
         // canvas.addChild(man.body);
         // canvas.addChild(man.lArm);
@@ -146,6 +163,7 @@ var gameEnv = {
         // canvas.addChild(man.rArm);
         // canvas.addChild(man.rLeg);
         instructions.text("Guess a letter");
+        play_again.text("(use letter keys)");
         this.word.text(this.hiddenW);
         console.log(gameEnv.currentW);
         this.keyListener()
@@ -277,6 +295,8 @@ var man = {
 //declare jQuery objects
 var instructions = $("#instructions");
 var play_again = $("#replay");
+var wPost = $("#left");
+var lPost = $("#right");
 play_again.text("   ");
 var listener1 = $(document);
 var listener2 = $(document);
@@ -297,18 +317,3 @@ function main() {
     });
 }
 
-// function keyListener() {
-//         listener2.on("keyup", function(event) {
-//             e = event.key;
-//             listener2.off();
-//             gameEnv.checkWord(e)
-//         });
-// }
-
-
-// canvas.addChild(man.head);
-// canvas.addChild(man.body);
-// canvas.addChild(man.LArm);
-// canvas.addChild(man.RArm);
-// canvas.addChild(man.LLeg);
-// canvas.addChild(man.RLeg);

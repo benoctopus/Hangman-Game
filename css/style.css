@@ -6,6 +6,12 @@ h1, h2 {
     font-family: "Courier New", monospace;
 }
 
+#title {margin-bottom: 108px;}
+#background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
 #word {
     letter-spacing: 10px;
 }
