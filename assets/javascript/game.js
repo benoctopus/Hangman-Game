@@ -328,9 +328,7 @@ function main() {
 }
 
 //declare jQuery objects
-
 //start the magic
-
 if (gameEnv.active === false) {
     var instructions = $("#instructions");
     var play_again = $("#replay");
