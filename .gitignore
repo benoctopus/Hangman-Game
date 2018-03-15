@@ -1,5 +1,6 @@
 #files to generally ignore for my projects
 **/.gitignore/
+.idea/
 **/.idea/
 *.xml
 notes.txt
