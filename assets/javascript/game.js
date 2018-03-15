@@ -164,7 +164,10 @@ var gameEnv = {
 
     startGame: function () {
         //setup new game environment
-        while (typeof listener1.event !== "undefined")
+        while (typeof listener1.event !== "undefined") {
+        //attempt to prevent keyup overflow events on reboot
+
+        }
         play_again.text("     ");
         this.sCount = 0;
         this.lCount = 0;
