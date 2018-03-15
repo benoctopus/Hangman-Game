@@ -177,10 +177,17 @@ var gameEnv = {
                 break;
             }
             else if (
-                i < 0 && character === " "
+                i < 0
+                && character === " "
                 || character.length > 1
                 || this.guess.indexOf(character) > -1
                 || this.hiddenW.indexOf(character) >-1
+                || character === ","
+                || character === "."
+                || character === "/"
+                || character === "["
+                || character === "]"
+                || typeof character !== "string"
             ) {
                 // disallows special keys without penalty
                 //disallows game to penalize player for pressing the same key twice
