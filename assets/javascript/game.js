@@ -1,3 +1,9 @@
+
+// I designed this game with simplicity at heart
+//simplicity for the user I mean
+//meanwhile, I'm over here crying
+//enjoy
+
 var gameEnv = {
     //declare game enviroment and properties as object
     word: $("#word"),
@@ -26,7 +32,22 @@ var gameEnv = {
         "tango",
         "texas",
         "cowboy",
-        "standoff"
+        "standoff",
+        "britches",
+        "drought",
+        "justice",
+        "lasso",
+        "longhorn",
+        "fortune",
+        "marksman",
+        "wrangler",
+        "yonder",
+        "yokel",
+        "saddlebag",
+        "surly",
+        "prospector"
+
+
     ],
     parts: [
         //creates list to draw parts correlating with lcount status, see gameEnv.checkWord
@@ -176,10 +197,9 @@ var gameEnv = {
     },
 
     startGame: function () {
-        //setup new game environment
+        //setup new game environment initial and on reboot
         while (typeof listener1.event !== "undefined") {
         //attempt to prevent keyup overflow events on reboot
-
         }
         play_again.text("     ");
         this.sCount = 0;
