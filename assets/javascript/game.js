@@ -175,7 +175,7 @@ var gameEnv = {
             else if (i < 0 && gotIt === true) {
                 break;
             }
-            else if (i < 0 && character === " " || character.length > 1) {
+            else if (i < 0 && character === " " || character.length > 1 || this.guess.indexOf(character) > -1) {
                 // disallows special keys without penalty
                 gotIt = true;
                 break
