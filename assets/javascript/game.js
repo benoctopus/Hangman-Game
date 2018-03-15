@@ -147,6 +147,7 @@ var gameEnv = {
     },
 
     updateGuess: function(key) {
+        //update already guessed characters
         if (this.guess.indexOf(key) < 0) {
             this.guess.push(key);
             this.guessTxt = this.guessTxt + key + " ";
@@ -175,8 +176,14 @@ var gameEnv = {
             else if (i < 0 && gotIt === true) {
                 break;
             }
-            else if (i < 0 && character === " " || character.length > 1 || this.guess.indexOf(character) > -1) {
+            else if (
+                i < 0 && character === " "
+                || character.length > 1
+                || this.guess.indexOf(character) > -1
+                || this.hiddenW.indexOf(character) >-1
+            ) {
                 // disallows special keys without penalty
+                //disallows game to penalize player for pressing the same key twice
                 gotIt = true;
                 break
             }
