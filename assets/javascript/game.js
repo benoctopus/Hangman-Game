@@ -8,6 +8,8 @@ var gameEnv = {
     active: false,
     winner: false,
     gameOver: false,
+    guess: [],
+    guessTxt: "",
     currentW: "",
     hiddenW: "",
     bank: [
@@ -27,6 +29,7 @@ var gameEnv = {
         "standoff"
     ],
     parts: [
+        //creates list to draw parts correlating with lcount status, see gameEnv.checkWord
         function() {
             canvas.addChild(man.base)
         },
@@ -122,6 +125,14 @@ var gameEnv = {
         }
     },
 
+    updateGuess: function(key) {
+        if (this.guess.indexOf(key) < 0) {
+            this.guess.push(key);
+            this.guessTxt = this.guessTxt + key + " ";
+            play_again.text(this.guessTxt)
+        }
+    },
+
     checkWord: function (character) {
         //checks if character is in word then either increments success count or failure count
         if(this.gameOver === true) {
@@ -143,12 +154,14 @@ var gameEnv = {
             else if (i < 0 && gotIt === true) {
                 break;
             }
-            else if (i < 0 && character === " ") {
+            else if (i < 0 && character === " " || character.length > 1) {
+                // disallows special keys without penalty
                 gotIt = true;
                 break
             }
             else if (i < 1 && this.gameOver === false) {
                 if(this.lCount < this.parts.length) {
+                    this.updateGuess(character);
                     this.parts[this.lCount]();
                     this.lCount++;
                     break
@@ -179,7 +192,9 @@ var gameEnv = {
         }
         canvas.reset();
         instructions.text("Guess a letter");
-        play_again.text("(use letter keys)");
+        this.guess.length = 0;
+        this.guessTxt = "Failed: ";
+        play_again.text("(Use Keyboard)");
         this.word.text(this.hiddenW);
         console.log(gameEnv.currentW);
         this.gameOver = false;
