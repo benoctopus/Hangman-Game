@@ -3,6 +3,8 @@
 ## About
 A simple Frontier themed Hang man game. 
 
+Deployed: https://benoctopus.github.io/Hangman-Game
+
 ### instructions
 
 Users use keyboard input to guess  letters in a hidden word. if they are correct in their guessing letters will become visible on the screen. If they are incorrect A piece of the Gallows will be drawn on the screen. The game is complete when the user either guesses all letters in the word correctly, or when the user has made enough incorrect guesses to fully draw the man hung-to-dry
